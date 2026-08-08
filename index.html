@@ -58,8 +58,9 @@
           </div>
           <div class="col">
             <label>Ngày tháng năm sinh <span class="required">*</span></label>
-            <input type="date" id="ngaySinh" name="ngaySinh" required>
-            <div class="error-msg">Vui lòng chọn ngày sinh</div>
+            <!-- Đã đổi sang kiểu nhập tay text với gợi ý định dạng DD/MM/YYYY -->
+            <input type="text" id="ngaySinh" name="ngaySinh" required placeholder="dd/mm/yyyy (VD: 15/08/2019)" maxlength="10">
+            <div class="error-msg">Nhập đúng định dạng ngày/tháng/năm (VD: 15/08/2019)</div>
           </div>
         </div>
         <div class="row">
@@ -127,7 +128,7 @@
 
     <!-- Địa chỉ -->
     <div class="card">
-      <div class="card-header bg-address">Địa chỉ (Cập nhật đơn vị hành chính mới nhất)</div>
+      <div class="card-header bg-address">Địa chỉ</div>
       <div class="card-body">
         
         <!-- Quê quán -->
@@ -235,10 +236,39 @@
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1D9Cr8_-3_Ke-9nKFG0bc5ooPsCFtYmTQFl4ahXoL0ALAlEvlZ-_nz18yB3krzhFe/exec";
-
-  // Sử dụng Nguồn API Địa chính Việt Nam cập nhật đầy đủ nhất
   const API_PROVINCES = "https://esgoo.net/api-tinhthanh/1/0.htm";
   const API_WARDS_PREFIX = "https://esgoo.net/api-tinhthanh/3/";
+
+  // Tự động chèn dấu '/' khi nhập ngày tháng năm sinh
+  const ngaySinhInput = document.getElementById('ngaySinh');
+  ngaySinhInput.addEventListener('input', function(e) {
+    let v = this.value.replace(/\D/g, ''); // Chỉ giữ lại chữ số
+    if (v.length > 8) v = v.substring(0, 8);
+    
+    if (v.length > 4) {
+      this.value = v.substring(0, 2) + '/' + v.substring(2, 4) + '/' + v.substring(4);
+    } else if (v.length > 2) {
+      this.value = v.substring(0, 2) + '/' + v.substring(2);
+    } else {
+      this.value = v;
+    }
+  });
+
+  // Kiểm tra tính hợp lệ của Ngày sinh (DD/MM/YYYY)
+  function isValidDateStr(dateStr) {
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return false;
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+    if (month < 1 || month > 12) return false;
+    if (year < 2000 || year > 2026) return false;
+
+    const daysInMonth = new Date(year, month, 0).getDate();
+    return day >= 1 && day <= daysInMonth;
+  }
 
   function validateInput(input) {
     const errorMsg = input.parentElement.querySelector('.error-msg');
@@ -246,6 +276,8 @@
 
     if (!input.value.trim()) {
       isValid = false;
+    } else if (input.id === 'ngaySinh') {
+      isValid = isValidDateStr(input.value.trim());
     } else if (input.dataset.pattern) {
       const regex = new RegExp(input.dataset.pattern);
       isValid = regex.test(input.value.trim());
@@ -277,7 +309,6 @@
     input.addEventListener('change', () => validateInput(input));
   });
 
-  // Tải danh mục địa chính mới nhất trực tiếp
   function initAddressSelector(prefix) {
     const tinh = document.getElementById(prefix + '_tinh');
     const xa = document.getElementById(prefix + '_xa');
