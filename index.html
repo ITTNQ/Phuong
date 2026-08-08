@@ -58,8 +58,8 @@
           </div>
           <div class="col">
             <label>Ngày tháng năm sinh <span class="required">*</span></label>
-            <!-- Đã đổi sang kiểu nhập tay text với gợi ý định dạng DD/MM/YYYY -->
-            <input type="text" id="ngaySinh" name="ngaySinh" required placeholder="dd/mm/yyyy (VD: 15/08/2019)" maxlength="10">
+            <!-- Thêm inputmode="numeric" và autocomplete="off" để ép điện thoại mở bàn phím số gõ tay -->
+            <input type="text" id="ngaySinh" name="ngaySinh" required inputmode="numeric" autocomplete="off" placeholder="Ngày/Tháng/Năm (VD: 15/08/2019)" maxlength="10">
             <div class="error-msg">Nhập đúng định dạng ngày/tháng/năm (VD: 15/08/2019)</div>
           </div>
         </div>
@@ -71,7 +71,7 @@
           </div>
           <div class="col">
             <label>Mã định danh (đúng 12 số) <span class="required">*</span></label>
-            <input type="text" id="maDinhDanh" name="maDinhDanh" required data-pattern="^[0-9]{12}$" placeholder="Mã định danh cá nhân">
+            <input type="text" id="maDinhDanh" name="maDinhDanh" required inputmode="numeric" data-pattern="^[0-9]{12}$" placeholder="Mã định danh cá nhân">
             <div class="error-msg">Mã định danh phải đủ 12 chữ số</div>
           </div>
         </div>
@@ -90,7 +90,7 @@
           </div>
           <div class="col">
             <label>Số điện thoại bố <span class="required">*</span></label>
-            <input type="tel" id="sdtBo" name="sdtBo" required data-pattern="^0[0-9]{9}$" placeholder="VD: 0912345678">
+            <input type="tel" id="sdtBo" name="sdtBo" required inputmode="numeric" data-pattern="^0[0-9]{9}$" placeholder="VD: 0912345678">
             <div class="error-msg">Số điện thoại phải đủ 10 số (bắt đầu bằng 0)</div>
           </div>
           <div class="col">
@@ -114,7 +114,7 @@
           </div>
           <div class="col">
             <label>Số điện thoại mẹ <span class="required">*</span></label>
-            <input type="tel" id="sdtMe" name="sdtMe" required data-pattern="^0[0-9]{9}$" placeholder="VD: 0987654321">
+            <input type="tel" id="sdtMe" name="sdtMe" required inputmode="numeric" data-pattern="^0[0-9]{9}$" placeholder="VD: 0987654321">
             <div class="error-msg">Số điện thoại phải đủ 10 số (bắt đầu bằng 0)</div>
           </div>
           <div class="col">
@@ -181,12 +181,12 @@
         <div class="row">
           <div class="col">
             <label>Chiều cao (cm) <span class="required">*</span></label>
-            <input type="number" id="chieuCao" name="chieuCao" min="50" max="200" required placeholder="VD: 115">
+            <input type="number" id="chieuCao" name="chieuCao" min="50" max="200" required inputmode="numeric" placeholder="VD: 115">
             <div class="error-msg">Nhập chiều cao từ 50 - 200cm</div>
           </div>
           <div class="col">
             <label>Cân nặng (kg) <span class="required">*</span></label>
-            <input type="number" id="canNang" name="canNang" min="10" max="100" step="0.1" required placeholder="VD: 20.5">
+            <input type="number" id="canNang" name="canNang" min="10" max="100" step="0.1" required inputmode="decimal" placeholder="VD: 20.5">
             <div class="error-msg">Nhập cân nặng từ 10 - 100kg</div>
           </div>
           <div class="col">
@@ -239,10 +239,10 @@
   const API_PROVINCES = "https://esgoo.net/api-tinhthanh/1/0.htm";
   const API_WARDS_PREFIX = "https://esgoo.net/api-tinhthanh/3/";
 
-  // Tự động chèn dấu '/' khi nhập ngày tháng năm sinh
+  // Xử lý tự gõ dấu '/' khi gõ số trên bàn phím điện thoại
   const ngaySinhInput = document.getElementById('ngaySinh');
   ngaySinhInput.addEventListener('input', function(e) {
-    let v = this.value.replace(/\D/g, ''); // Chỉ giữ lại chữ số
+    let v = this.value.replace(/\D/g, '');
     if (v.length > 8) v = v.substring(0, 8);
     
     if (v.length > 4) {
@@ -254,7 +254,6 @@
     }
   });
 
-  // Kiểm tra tính hợp lệ của Ngày sinh (DD/MM/YYYY)
   function isValidDateStr(dateStr) {
     const parts = dateStr.split('/');
     if (parts.length !== 3) return false;
