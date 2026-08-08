@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THÔNG TIN HỌC SINH LỚP 1A2</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+    body { background-color: #f4f6f9; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .header { text-align: center; margin-bottom: 25px; }
+    .header h1 { color: #1a73e8; font-size: 24px; font-weight: 700; text-transform: uppercase; }
+    .header p { color: #666; font-size: 14px; margin-top: 5px; }
+    .card { border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 20px; overflow: hidden; background: #fff; }
+    .card-header { padding: 10px 15px; font-weight: 600; font-size: 15px; color: #ffffff; }
+    .bg-student { background-color: #1a73e8; }
+    .bg-father { background-color: #1b8e4e; }
+    .bg-mother { background-color: #fbbc04; color: #333 !important; }
+    .bg-address { background-color: #00bcd4; }
+    .bg-health { background-color: #e91e63; }
+    .card-body { padding: 15px; }
+    .row { display: flex; flex-wrap: wrap; margin: 0 -8px; }
+    .col { padding: 0 8px; margin-bottom: 12px; flex: 1; min-width: 200px; position: relative; }
+    .section-title { font-weight: 600; font-size: 14px; color: #00bcd4; margin: 10px 8px 8px 8px; width: 100%; border-bottom: 1px dashed #ccc; padding-bottom: 4px; }
+    label { display: block; font-size: 13px; color: #333; margin-bottom: 6px; font-weight: 500; }
+    .required { color: red; }
+    
+    input, select { width: 100%; padding: 9px 12px; border: 1px solid #dcdfe6; border-radius: 6px; font-size: 14px; outline: none; background-color: #fff; transition: all 0.2s; }
+    input:focus, select:focus { border-color: #1a73e8; }
+    
+    /* Style khi báo lỗi và khi nhập hợp lệ */
+    input.invalid, select.invalid { border-color: #dc3545 !important; background-color: #fff8f8; }
+    input.valid, select.valid { border-color: #28a745 !important; }
+    .error-msg { color: #dc3545; font-size: 11px; margin-top: 4px; display: none; font-weight: 500; }
+    
+    .btn-submit { width: 100%; background-color: #1a73e8; color: white; border: none; padding: 12px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    .btn-submit:hover { background-color: #1557b0; }
+    #message { margin-top: 15px; text-align: center; font-weight: 600; font-size: 15px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>THÔNG TIN HỌC SINH LỚP 1A2</h1>
+    <p>Năm học 2026 - 2027</p>
+  </div>
+
+  <form id="studentForm" novalidate>
+    <!-- Thông tin học sinh -->
+    <div class="card">
+      <div class="card-header bg-student">Thông tin học sinh</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col" style="flex: 2;">
+            <label>Họ và tên học sinh <span class="required">*</span></label>
+            <input type="text" id="hoTenHS" name="hoTenHS" required placeholder="Nhập họ và tên">
+            <div class="error-msg">Vui lòng nhập họ tên học sinh</div>
+          </div>
+          <div class="col">
+            <label>Ngày tháng năm sinh <span class="required">*</span></label>
+            <input type="date" id="ngaySinh" name="ngaySinh" required>
+            <div class="error-msg">Vui lòng chọn ngày sinh</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Nơi sinh <span class="required">*</span></label>
+            <input type="text" id="noiSinh" name="noiSinh" required placeholder="Tỉnh/Thành phố nơi sinh">
+            <div class="error-msg">Vui lòng nhập nơi sinh</div>
+          </div>
+          <div class="col">
+            <label>Mã định danh (đúng 12 số) <span class="required">*</span></label>
+            <input type="text" id="maDinhDanh" name="maDinhDanh" required data-pattern="^[0-9]{12}$" placeholder="Mã định danh cá nhân">
+            <div class="error-msg">Mã định danh phải đủ 12 chữ số</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thông tin bố -->
+    <div class="card">
+      <div class="card-header bg-father">Thông tin bố</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <label>Họ tên bố <span class="required">*</span></label>
+            <input type="text" id="hoTenBo" name="hoTenBo" required placeholder="Nhập họ tên bố">
+            <div class="error-msg">Vui lòng nhập họ tên bố</div>
+          </div>
+          <div class="col">
+            <label>Số điện thoại bố <span class="required">*</span></label>
+            <input type="tel" id="sdtBo" name="sdtBo" required data-pattern="^0[0-9]{9}$" placeholder="VD: 0912345678">
+            <div class="error-msg">Số điện thoại phải đủ 10 số (bắt đầu bằng 0)</div>
+          </div>
+          <div class="col">
+            <label>Nghề nghiệp - Nơi công tác <span class="required">*</span></label>
+            <input type="text" id="ngheNghiepBo" name="ngheNghiepBo" required placeholder="Nhập nghề nghiệp, nơi làm việc">
+            <div class="error-msg">Vui lòng nhập nghề nghiệp bố</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thông tin mẹ -->
+    <div class="card">
+      <div class="card-header bg-mother">Thông tin mẹ</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <label>Họ tên mẹ <span class="required">*</span></label>
+            <input type="text" id="hoTenMe" name="hoTenMe" required placeholder="Nhập họ tên mẹ">
+            <div class="error-msg">Vui lòng nhập họ tên mẹ</div>
+          </div>
+          <div class="col">
+            <label>Số điện thoại mẹ <span class="required">*</span></label>
+            <input type="tel" id="sdtMe" name="sdtMe" required data-pattern="^0[0-9]{9}$" placeholder="VD: 0987654321">
+            <div class="error-msg">Số điện thoại phải đủ 10 số (bắt đầu bằng 0)</div>
+          </div>
+          <div class="col">
+            <label>Nghề nghiệp - Nơi công tác <span class="required">*</span></label>
+            <input type="text" id="ngheNghiepMe" name="ngheNghiepMe" required placeholder="Nhập nghề nghiệp, nơi làm việc">
+            <div class="error-msg">Vui lòng nhập nghề nghiệp mẹ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Địa chỉ -->
+    <div class="card">
+      <div class="card-header bg-address">Địa chỉ</div>
+      <div class="card-body">
+        
+        <!-- Quê quán -->
+        <div class="section-title">1. Quê quán</div>
+        <div class="row">
+          <div class="col">
+            <label>Tỉnh / Thành phố <span class="required">*</span></label>
+            <select id="qq_tinh" required><option value="">-- Chọn Tỉnh/Thành --</option></select>
+            <div class="error-msg">Vui lòng chọn Tỉnh/Thành</div>
+          </div>
+          <div class="col">
+            <label>Phường / Xã / Thị trấn <span class="required">*</span></label>
+            <select id="qq_xa" disabled required><option value="">-- Chọn Phường/Xã --</option></select>
+            <div class="error-msg">Vui lòng chọn Phường/Xã</div>
+          </div>
+        </div>
+
+        <!-- Nơi ở hiện tại -->
+        <div class="section-title">2. Nơi ở hiện tại</div>
+        <div class="row">
+          <div class="col">
+            <label>Tỉnh / Thành phố <span class="required">*</span></label>
+            <select id="no_tinh" required><option value="">-- Chọn Tỉnh/Thành --</option></select>
+            <div class="error-msg">Vui lòng chọn Tỉnh/Thành</div>
+          </div>
+          <div class="col">
+            <label>Phường / Xã / Thị trấn <span class="required">*</span></label>
+            <select id="no_xa" disabled required><option value="">-- Chọn Phường/Xã --</option></select>
+            <div class="error-msg">Vui lòng chọn Phường/Xã</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Số nhà, đường / thôn, xóm (chi tiết) <span class="required">*</span></label>
+            <input type="text" id="no_chitiet" required placeholder="VD: Số 12, Đường Nguyễn Trãi">
+            <div class="error-msg">Vui lòng nhập chi tiết nơi ở</div>
+          </div>
+        </div>
+
+        <!-- Hidden input gửi dữ liệu -->
+        <input type="hidden" name="queQuan" id="queQuanFull">
+        <input type="hidden" name="noiOHienTai" id="noiOHienTaiFull">
+
+      </div>
+    </div>
+
+    <!-- Sức khỏe & Thông tin khác -->
+    <div class="card">
+      <div class="card-header bg-health">Sức khỏe & Thông tin bổ sung</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <label>Chiều cao (cm) <span class="required">*</span></label>
+            <input type="number" id="chieuCao" name="chieuCao" min="50" max="200" required placeholder="VD: 115">
+            <div class="error-msg">Nhập chiều cao từ 50 - 200cm</div>
+          </div>
+          <div class="col">
+            <label>Cân nặng (kg) <span class="required">*</span></label>
+            <input type="number" id="canNang" name="canNang" min="10" max="100" step="0.1" required placeholder="VD: 20.5">
+            <div class="error-msg">Nhập cân nặng từ 10 - 100kg</div>
+          </div>
+          <div class="col">
+            <label>Bệnh về mắt (nếu không ghi "Không") <span class="required">*</span></label>
+            <input type="text" id="benhVeMat" name="benhVeMat" required placeholder="VD: Cận 1.5 độ / Không">
+            <div class="error-msg">Vui lòng điền thông tin mắt</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Biết bơi <span class="required">*</span></label>
+            <select id="bietBoi" name="bietBoi" required>
+              <option value="">-- Chọn --</option>
+              <option value="Chưa biết">Chưa biết</option>
+              <option value="Đã biết">Đã biết</option>
+            </select>
+            <div class="error-msg">Vui lòng chọn thông tin</div>
+          </div>
+          <div class="col">
+            <label>Thuộc hộ gia đình <span class="required">*</span></label>
+            <select id="hoGiaDinh" name="hoGiaDinh" required>
+              <option value="">-- Chọn --</option>
+              <option value="Bình thường">Bình thường</option>
+              <option value="Hộ nghèo">Hộ nghèo</option>
+              <option value="Hộ cận nghèo">Hộ cận nghèo</option>
+              <option value="Gia đình chính sách">Gia đình chính sách</option>
+            </select>
+            <div class="error-msg">Vui lòng chọn đối tượng gia đình</div>
+          </div>
+          <div class="col">
+            <label>Đăng ký ăn bán trú <span class="required">*</span></label>
+            <select id="banTru" name="banTru" required>
+              <option value="">-- Chọn --</option>
+              <option value="Có">Có</option>
+              <option value="Không">Không</option>
+            </select>
+            <div class="error-msg">Vui lòng chọn đăng ký bán trú</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">LƯU THÔNG TIN HỌC SINH</button>
+    <div id="message"></div>
+  </form>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1D9Cr8_-3_Ke-9nKFG0bc5ooPsCFtYmTQFl4ahXoL0ALAlEvlZ-_nz18yB3krzhFe/exec";
+  const API_HOST = "https://provinces.open-api.vn/api/";
+
+  // --- HÀM KIỂM TRA LỖI TỨC THÌ (INSTANT VALIDATION) ---
+  function validateInput(input) {
+    const errorMsg = input.parentElement.querySelector('.error-msg');
+    let isValid = true;
+
+    if (!input.value.trim()) {
+      isValid = false;
+    } else if (input.dataset.pattern) {
+      const regex = new RegExp(input.dataset.pattern);
+      isValid = regex.test(input.value.trim());
+    } else if (input.type === 'number') {
+      const val = parseFloat(input.value);
+      const min = parseFloat(input.min);
+      const max = parseFloat(input.max);
+      if (isNaN(val) || (min && val < min) || (max && val > max)) {
+        isValid = false;
+      }
+    }
+
+    if (!isValid) {
+      input.classList.add('invalid');
+      input.classList.remove('valid');
+      if (errorMsg) errorMsg.style.display = 'block';
+    } else {
+      input.classList.remove('invalid');
+      input.classList.add('valid');
+      if (errorMsg) errorMsg.style.display = 'none';
+    }
+    return isValid;
+  }
+
+  // Gắn sự kiện kiểm tra ngay khi nhập hoặc bấm ra ngoài
+  const allInputs = document.querySelectorAll('#studentForm input:not([type="hidden"]), #studentForm select');
+  allInputs.forEach(input => {
+    input.addEventListener('input', () => validateInput(input));
+    input.addEventListener('blur', () => validateInput(input));
+    input.addEventListener('change', () => validateInput(input));
+  });
+
+  // --- API ĐỊA CHÍNH ---
+  function initAddressSelector(prefix) {
+    const tinh = document.getElementById(prefix + '_tinh');
+    const xa = document.getElementById(prefix + '_xa');
+
+    fetch(API_HOST + '?depth=1')
+      .then(res => res.json())
+      .then(data => {
+        data.forEach(item => {
+          tinh.innerHTML += `<option value="${item.code}" data-name="${item.name}">${item.name}</option>`;
+        });
+      });
+
+    tinh.addEventListener('change', function() {
+      xa.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+      xa.disabled = true;
+
+      if (this.value) {
+        fetch(API_HOST + 'p/' + this.value + '?depth=3')
+          .then(res => res.json())
+          .then(data => {
+            let allWards = [];
+            data.districts.forEach(district => {
+              if (district.wards) {
+                allWards = allWards.concat(district.wards);
+              }
+            });
+
+            allWards.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
+
+            allWards.forEach(item => {
+              xa.innerHTML += `<option value="${item.code}" data-name="${item.name}">${item.name}</option>`;
+            });
+            xa.disabled = false;
+          });
+      }
+    });
+  }
+
+  initAddressSelector('qq');
+  initAddressSelector('no');
+
+  function getSelectedText(selectId) {
+    const el = document.getElementById(selectId);
+    if (el.selectedIndex <= 0) return "";
+    return el.options[el.selectedIndex].getAttribute('data-name') || "";
+  }
+
+  const form = document.getElementById('studentForm');
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('message');
+
+  // SUBMIT FORM
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Kiềm tra toàn bộ các ô xem có ô nào bị lỗi không
+    let isAllValid = true;
+    let firstInvalidInput = null;
+
+    allInputs.forEach(input => {
+      const valid = validateInput(input);
+      if (!valid) {
+        isAllValid = false;
+        if (!firstInvalidInput) firstInvalidInput = input;
+      }
+    });
+
+    if (!isAllValid) {
+      msg.style.color = 'red';
+      msg.textContent = "❌ Vui lòng sửa các ô bị tô đỏ trước khi gửi!";
+      if (firstInvalidInput) firstInvalidInput.focus();
+      return;
+    }
+
+    // Ghép Địa chỉ
+    const qqTinh = getSelectedText('qq_tinh');
+    const qqXa = getSelectedText('qq_xa');
+    document.getElementById('queQuanFull').value = [qqXa, qqTinh].filter(Boolean).join(', ');
+
+    const noChiTiet = document.getElementById('no_chitiet').value.trim();
+    const noTinh = getSelectedText('no_tinh');
+    const noXa = getSelectedText('no_xa');
+    document.getElementById('noiOHienTaiFull').value = [noChiTiet, noXa, noTinh].filter(Boolean).join(', ');
+
+    btn.disabled = true;
+    btn.textContent = "Đang gửi dữ liệu...";
+    msg.textContent = "";
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: new FormData(form)
+    })
+    .then(() => {
+      btn.disabled = false;
+      btn.textContent = "LƯU THÔNG TIN HỌC SINH";
+      msg.style.color = 'green';
+      msg.textContent = "✅ Đã gửi và lưu thông tin học sinh thành công!";
+      form.reset();
+      allInputs.forEach(input => input.classList.remove('valid', 'invalid'));
+      document.getElementById('qq_xa').disabled = true;
+      document.getElementById('no_xa').disabled = true;
+    })
+    .catch(err => {
+      btn.disabled = false;
+      btn.textContent = "LƯU THÔNG TIN HỌC SINH";
+      msg.style.color = 'red';
+      msg.textContent = "❌ Lỗi kết nối! Vui lòng thử lại.";
+    });
+  });
+</script>
+
+</body>
+</html>
