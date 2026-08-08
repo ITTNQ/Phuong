@@ -28,7 +28,6 @@
     input, select { width: 100%; padding: 9px 12px; border: 1px solid #dcdfe6; border-radius: 6px; font-size: 14px; outline: none; background-color: #fff; transition: all 0.2s; }
     input:focus, select:focus { border-color: #1a73e8; }
     
-    /* Style khi báo lỗi và khi nhập hợp lệ */
     input.invalid, select.invalid { border-color: #dc3545 !important; background-color: #fff8f8; }
     input.valid, select.valid { border-color: #28a745 !important; }
     .error-msg { color: #dc3545; font-size: 11px; margin-top: 4px; display: none; font-weight: 500; }
@@ -128,7 +127,7 @@
 
     <!-- Địa chỉ -->
     <div class="card">
-      <div class="card-header bg-address">Địa chỉ</div>
+      <div class="card-header bg-address">Địa chỉ (Cập nhật đơn vị hành chính mới nhất)</div>
       <div class="card-body">
         
         <!-- Quê quán -->
@@ -168,7 +167,6 @@
           </div>
         </div>
 
-        <!-- Hidden input gửi dữ liệu -->
         <input type="hidden" name="queQuan" id="queQuanFull">
         <input type="hidden" name="noiOHienTai" id="noiOHienTaiFull">
 
@@ -237,9 +235,11 @@
 
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1D9Cr8_-3_Ke-9nKFG0bc5ooPsCFtYmTQFl4ahXoL0ALAlEvlZ-_nz18yB3krzhFe/exec";
-  const API_HOST = "https://provinces.open-api.vn/api/";
 
-  // --- HÀM KIỂM TRA LỖI TỨC THÌ (INSTANT VALIDATION) ---
+  // Sử dụng Nguồn API Địa chính Việt Nam cập nhật đầy đủ nhất
+  const API_PROVINCES = "https://esgoo.net/api-tinhthanh/1/0.htm";
+  const API_WARDS_PREFIX = "https://esgoo.net/api-tinhthanh/3/";
+
   function validateInput(input) {
     const errorMsg = input.parentElement.querySelector('.error-msg');
     let isValid = true;
@@ -270,7 +270,6 @@
     return isValid;
   }
 
-  // Gắn sự kiện kiểm tra ngay khi nhập hoặc bấm ra ngoài
   const allInputs = document.querySelectorAll('#studentForm input:not([type="hidden"]), #studentForm select');
   allInputs.forEach(input => {
     input.addEventListener('input', () => validateInput(input));
@@ -278,17 +277,19 @@
     input.addEventListener('change', () => validateInput(input));
   });
 
-  // --- API ĐỊA CHÍNH ---
+  // Tải danh mục địa chính mới nhất trực tiếp
   function initAddressSelector(prefix) {
     const tinh = document.getElementById(prefix + '_tinh');
     const xa = document.getElementById(prefix + '_xa');
 
-    fetch(API_HOST + '?depth=1')
+    fetch(API_PROVINCES)
       .then(res => res.json())
       .then(data => {
-        data.forEach(item => {
-          tinh.innerHTML += `<option value="${item.code}" data-name="${item.name}">${item.name}</option>`;
-        });
+        if (data.error === 0) {
+          data.data.forEach(item => {
+            tinh.innerHTML += `<option value="${item.id}" data-name="${item.name}">${item.name}</option>`;
+          });
+        }
       });
 
     tinh.addEventListener('change', function() {
@@ -296,22 +297,15 @@
       xa.disabled = true;
 
       if (this.value) {
-        fetch(API_HOST + 'p/' + this.value + '?depth=3')
+        fetch(API_WARDS_PREFIX + this.value + '.htm')
           .then(res => res.json())
           .then(data => {
-            let allWards = [];
-            data.districts.forEach(district => {
-              if (district.wards) {
-                allWards = allWards.concat(district.wards);
-              }
-            });
-
-            allWards.sort((a, b) => a.name.localeCompare(b.name, 'vi'));
-
-            allWards.forEach(item => {
-              xa.innerHTML += `<option value="${item.code}" data-name="${item.name}">${item.name}</option>`;
-            });
-            xa.disabled = false;
+            if (data.error === 0) {
+              data.data.forEach(item => {
+                xa.innerHTML += `<option value="${item.id}" data-name="${item.name_ext || item.name}">${item.name_ext || item.name}</option>`;
+              });
+              xa.disabled = false;
+            }
           });
       }
     });
@@ -330,11 +324,9 @@
   const btn = document.getElementById('submitBtn');
   const msg = document.getElementById('message');
 
-  // SUBMIT FORM
   form.addEventListener('submit', e => {
     e.preventDefault();
 
-    // Kiềm tra toàn bộ các ô xem có ô nào bị lỗi không
     let isAllValid = true;
     let firstInvalidInput = null;
 
@@ -353,7 +345,6 @@
       return;
     }
 
-    // Ghép Địa chỉ
     const qqTinh = getSelectedText('qq_tinh');
     const qqXa = getSelectedText('qq_xa');
     document.getElementById('queQuanFull').value = [qqXa, qqTinh].filter(Boolean).join(', ');
